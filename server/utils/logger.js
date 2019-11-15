@@ -7,14 +7,14 @@ const logger = winston.createLogger({
     ...[
       winston.format.timestamp(),
       ...(settings.app.debug ? [winston.format.colorize()] : []),
-      ...(settings.app.debug ? [winston.format.json()] : [winston.format.prettyPrint()]),
+      ...(settings.app.debug ? [winston.format.prettyPrint()] : [winston.format.json()]),
     ],
   ),
   transports: [
     new winston.transports.Console({
       handleExceptions: true,
       name: 'console.info',
-      colorize: !settings.app.debug,
+      colorize: settings.app.debug,
       showLevel: true,
     }),
   ],

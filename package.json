@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "babel --delete-dir-on-start -d dist/ ./server -s",
+    "start": "npm run build && node -r dotenv/config dist/server.js",
     "dev": "nodemon --watch 'server/**/*.js' --exec 'node -r @babel/register -r dotenv/config' server/server.js"
   },
   "author": "fcgomes92",

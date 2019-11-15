@@ -4,7 +4,7 @@ loggerLevel: process.env.LOGGER_LEVEL || 'info',
   app: {
     version,
     mode: process.env.NODE_ENV,
-    debug: process.env.NODE_ENV !== 'development',
+    debug: process.env.NODE_ENV === 'development',
     port: process.env.PORT || 8090,
   },
   cors: {
