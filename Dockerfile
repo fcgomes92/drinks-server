@@ -1,6 +1,4 @@
 FROM fcgomes92/nginx-node:latest
-EXPOSE 80
-EXPOSE 3000
 
 COPY ./package.json /app
 
@@ -9,6 +7,8 @@ RUN npm install --no-cache
 
 COPY ./ /app
 
+ARG PORT
 ENV APP_PORT=$PORT
+RUN echo $APP_PORT
 
 CMD [ "node" ]
