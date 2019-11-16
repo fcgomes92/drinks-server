@@ -8,7 +8,7 @@ RUN npm install --no-cache
 COPY ./ /app
 
 ARG PORT
-ENV APP_PORT=$PORT
-RUN echo $APP_PORT
+ENV PORT=$PORT
+RUN echo $PORT
 
 CMD [ "node" ]
