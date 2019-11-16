@@ -2,7 +2,6 @@ import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
-import https from 'https';
 import settings from './settings';
 import logger from './utils/logger';
 import { ERR_500, parseError, ERR_404 } from './utils/errors';
@@ -13,7 +12,7 @@ app.use(urlencoded({ extended: true }));
 app.use(json({ type: 'application/json' }));
 // const app = configureWebSocket(app);
 
-const server = settings.app.debug ? http.createServer(app) : https.createServer(app);
+const server = http.createServer(app);
 
 // Object.values(api).forEach(endpoint => app.use(endpoint.route, endpoint.router));
 
