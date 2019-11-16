@@ -3,10 +3,10 @@ services:
   web:
     image: fcogmes92/drinks-server
     build:
-      context: ./
-
+      context: .
+      dockerfile: ./Dockerfile
     ports:
-      - '8000:80'
+      - '8000:3000'
     env_file: ./.env
     volumes:
       - ./:/app

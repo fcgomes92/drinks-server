@@ -9,4 +9,6 @@ RUN npm install --no-cache
 
 COPY ./ /app
 
-CMD [ "start" ]
+ENV APP_PORT=$PORT
+
+CMD [ "node" ]
