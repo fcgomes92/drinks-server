@@ -9,6 +9,5 @@ COPY ./ /app
 
 ARG PORT
 ENV PORT=$PORT
-RUN echo $PORT
 
 CMD [ "node" ]
