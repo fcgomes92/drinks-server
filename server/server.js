@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
   return res.status(200).json({ ok: 'ok' });
 });
 
-app.use(([, res]) => {
+app.use((req, res) => {
   return res.status(404).json(parseError({ code: ERR_404 }));
 });
 
