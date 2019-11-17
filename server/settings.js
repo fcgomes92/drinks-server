@@ -1,6 +1,9 @@
 import { version } from '../package.json';
 export default {
-loggerLevel: process.env.LOGGER_LEVEL || 'info',
+  loggerLevel: process.env.LOGGER_LEVEL || 'info',
+  firebase: {
+    gac: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
+  },
   app: {
     version,
     mode: process.env.NODE_ENV,

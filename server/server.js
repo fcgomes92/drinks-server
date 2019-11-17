@@ -5,6 +5,8 @@ import http from 'http';
 import settings from './settings';
 import logger from './utils/logger';
 import { ERR_500, parseError, ERR_404 } from './utils/errors';
+import { requireAuthentication } from './middlewares/auth';
+import api from './api/index';
 
 const app = express();
 app.use(cors(settings.cors));
@@ -14,7 +16,7 @@ app.use(json({ type: 'application/json' }));
 
 const server = http.createServer(app);
 
-// Object.values(api).forEach(endpoint => app.use(endpoint.route, endpoint.router));
+Object.values(api).forEach(endpoint => app.use(endpoint.route, endpoint.router));
 
 app.get('/', (req, res) => {
   return res.status(200).json({ ok: 'ok' });
