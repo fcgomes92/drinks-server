@@ -32,7 +32,6 @@ export const requireAuthentication = async (req, res, next) => {
 
 export const requireAuthenticationWs = async (ws, req, next) => {
   try {
-    console.log(req.query);
     const token = req.query.token;
     const userInfo = await admin.auth().verifyIdToken(token);
     req.user = userInfo;

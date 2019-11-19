@@ -25,4 +25,13 @@ export const checkServer = async function(server, data) {
   });
 };
 
+export const getPassword = req => {
+  if (req.body && req.body.password) {
+    return req.body.password;
+  }
+  if (req.query && req.query.password) {
+    return req.query.password;
+  }
+};
+
 export default admin;
