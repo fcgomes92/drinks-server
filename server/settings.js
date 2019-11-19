@@ -4,6 +4,9 @@ export default {
   firebase: {
     gac: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS),
   },
+  websocket: {
+    timeout: 1000,
+  },
   app: {
     version,
     mode: process.env.NODE_ENV,

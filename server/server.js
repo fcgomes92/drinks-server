@@ -1,20 +1,18 @@
 import { json, urlencoded } from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import expressWs from 'express-ws';
 import http from 'http';
 import settings from './settings';
+import { ERR_404, ERR_500, parseError } from './utils/errors';
 import logger from './utils/logger';
-import { ERR_500, parseError, ERR_404 } from './utils/errors';
-import { requireAuthentication } from './middlewares/auth';
-import api from './api/index';
 
 const app = express();
 app.use(cors(settings.cors));
 app.use(urlencoded({ extended: true }));
 app.use(json({ type: 'application/json' }));
-// const app = configureWebSocket(app);
-
-const server = http.createServer(app);
+expressWs(app);
+const api = require('./api/index').default;
 
 Object.values(api).forEach(endpoint => app.use(endpoint.route, endpoint.router));
 
@@ -31,9 +29,9 @@ app.use((err, req, res) => {
 });
 
 if (settings.app.mode !== 'test') {
-  server.listen(settings.app.port, () => {
+  app.listen(settings.app.port, () => {
     logger.info(`Running app (v${settings.app.version}) in ${settings.app.port} DEBUG: (${settings.app.debug})`);
   });
 }
 
-export default server;
+export default app;

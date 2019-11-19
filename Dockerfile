@@ -10,4 +10,6 @@ COPY ./ /app
 ARG PORT
 ENV PORT=$PORT
 
+RUN mkdir /database
+
 CMD [ "node" ]

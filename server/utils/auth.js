@@ -1,22 +1,3 @@
-// firebase.initializeApp({
-//     serviceAccount: "path/to/serviceAccountCredentials.json",
-//     databaseURL: "https://databaseName.firebaseio.com"
-// });
-
-// var FirebaseStrategy = require('passport-firebase-auth').Strategy;
-
-// passport.use(new FirebaseStrategy({
-//     firebaseProjectId: "project-id",
-//     authorizationURL: 'https://account.example.net/auth',
-//     callbackURL: 'https://www.example.net/auth/firebase/callback'
-//   },
-//   function(accessToken, refreshToken, decodedToken, cb) {
-//     User.findOrCreate(..., function (err, user) {
-//       return cb(err, user);
-//     });
-//   }
-// ));
-
 import bcrypt from 'bcrypt';
 import * as admin from 'firebase-admin';
 import settings from '../settings';
@@ -36,9 +17,10 @@ export const hashPassword = async function(data) {
 
 export const checkServer = async function(server, data) {
   return await new Promise((resolve, reject) => {
-    bcrypt.compare(server.password, data, function(err, hash) {
+    console.log(server, data);
+    bcrypt.compare(data, server.password, function(err, same) {
       if (err) reject(err);
-      resolve(hash);
+      resolve(same);
     });
   });
 };

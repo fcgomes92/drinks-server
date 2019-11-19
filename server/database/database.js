@@ -1,7 +1,10 @@
 import PouchDB from 'pouchdb';
 import memory from 'pouchdb-adapter-memory';
 PouchDB.plugin(memory);
+const LocalPouch = PouchDB.defaults({
+  prefix: '/database',
+});
 
-export const users = new PouchDB('users', { adapter: 'memory' });
-export const servers = new PouchDB('servers', { adapter: 'memory' });
-export const clients = new PouchDB('clients', { adapter: 'memory' });
+export const users = new LocalPouch('users');
+export const servers = new LocalPouch('servers');
+export const clients = new LocalPouch('clients');

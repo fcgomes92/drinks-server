@@ -16,10 +16,10 @@ export const requireAuthentication = async (req, res, next) => {
     try {
       const { authToken } = req;
       const userInfo = await admin.auth().verifyIdToken(authToken);
-      req.authId = userInfo.uid;
       req.user = userInfo;
       users.put({
         _id: req.user.user_id,
+        uid: req.user.uid,
         email: req.user.email,
       });
       return next();
@@ -28,4 +28,22 @@ export const requireAuthentication = async (req, res, next) => {
       return res.status(401).json({ error: 'not_authorized' });
     }
   });
+};
+
+export const requireAuthenticationWs = async (ws, req, next) => {
+  try {
+    console.log(req.query);
+    const token = req.query.token;
+    const userInfo = await admin.auth().verifyIdToken(token);
+    req.user = userInfo;
+    users.put({
+      _id: req.user.user_id,
+      uid: req.user.uid,
+      email: req.user.email,
+    });
+    return next();
+  } catch (e) {
+    logger.error({ error: e });
+    throw new Error();
+  }
 };

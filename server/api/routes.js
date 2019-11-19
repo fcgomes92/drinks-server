@@ -17,6 +17,8 @@ export default {
     base: version => `${baseUri}/${version}/servers`,
     get: () => '/',
     register: () => '/register',
+    id: (id = ':id') => `/${id}`,
+    connect: (id = ':id') => `/${id}/connect`,
   },
   clients: {
     base: version => `${baseUri}/${version}/clients`,
