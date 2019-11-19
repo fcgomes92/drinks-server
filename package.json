@@ -45,5 +45,26 @@
     "nodemon": "^1.19.4",
     "now": "^16.5.2",
     "prettier": "^1.19.1"
+  },
+  "lint-staged": {
+    "linters": {
+      "*.{js,jsx}": [
+        "eslint --fix",
+        "git add ."
+      ],
+      "*.{json,md,scss,yaml,yml,js,jsx}": [
+        "prettier --write",
+        "git add ."
+      ]
+    },
+    "ignore": [
+      "**/dist/",
+      "node_modules"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
