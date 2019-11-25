@@ -1,4 +1,4 @@
-import admin from '../utils/auth';
+import admin, { getPassword } from '../utils/auth';
 import logger from '../utils/logger';
 import { users } from '../database/database';
 
@@ -45,4 +45,12 @@ export const requireAuthenticationWs = async (ws, req, next) => {
     logger.error({ error: e });
     throw new Error();
   }
+};
+
+export const requireServerAuthenticationWs = async (ws, req, next) => {
+  const { id } = req.params;
+  const doc = await servers.get(id);
+  const password = getPassword(req);
+  if (!(await checkServerPassword(doc, password))) ;
+  next();
 };

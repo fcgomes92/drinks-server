@@ -15,9 +15,8 @@ export const hashPassword = async function(data) {
   });
 };
 
-export const checkServer = async function(server, data) {
+export const checkServerPassword = async function(server, data) {
   return await new Promise((resolve, reject) => {
-    console.log(server, data);
     bcrypt.compare(data, server.password, function(err, same) {
       if (err) reject(err);
       resolve(same);
