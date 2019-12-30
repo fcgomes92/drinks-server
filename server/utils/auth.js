@@ -15,8 +15,8 @@ export const hashPassword = async function(data) {
   });
 };
 
-export const checkServerPassword = async function(server, data) {
-  return await new Promise((resolve, reject) => {
+export const checkServerPassword = function(server, data) {
+  return new Promise((resolve, reject) => {
     bcrypt.compare(data, server.password, function(err, same) {
       if (err) reject(err);
       resolve(same);
@@ -31,6 +31,7 @@ export const getPassword = req => {
   if (req.query && req.query.password) {
     return req.query.password;
   }
+  return null;
 };
 
 export default admin;

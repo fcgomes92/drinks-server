@@ -38,13 +38,41 @@ export const connectToServer = async (ws, req, next) => {
     const doc = await servers.get(req.params.id);
     doc.users = [...(doc.users || []), req.user.user_id];
     await servers.put(doc);
-    ws.on('message', () => {
-      return ws.send(JSON.stringify({ error: false, code: 200 }));
+    ws.on('message', data => {
+      const _data = JSON.parse(data);
+      const { type = 'no_type' } = _data;
+      switch (type) {
+        case 'time':
+          return ws.send(
+            JSON.stringify({
+              error: false,
+              code: 200,
+              data: {
+                now: new Date(),
+                user: req.user.email,
+              },
+              type,
+            }),
+          );
+        case 'echo':
+        default:
+          return ws.send(
+            JSON.stringify({
+              error: false,
+              code: 200,
+              data: {
+                ..._data,
+                user: req.user.email,
+              },
+              type,
+            }),
+          );
+      }
     });
-    ws.send(JSON.stringify({ error: false, code: 200 }));
+    ws.send(JSON.stringify({ error: false, code: 200, type: 'connection', data: {} }));
   } catch (error) {
     logger.error({ error });
-    return ws.send(JSON.stringify({ error: true, code: 400 }));
+    return ws.send(JSON.stringify({ error: true, code: 400, data: {} }));
   }
 };
 
