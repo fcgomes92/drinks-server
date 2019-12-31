@@ -23,6 +23,7 @@
     "passport": "^0.4.0",
     "pouchdb": "^7.1.1",
     "pouchdb-adapter-memory": "^7.1.1",
+    "pouchdb-find": "^7.1.1",
     "uuid": "^3.3.3",
     "websocket": "^1.0.30",
     "winston": "^3.2.1",

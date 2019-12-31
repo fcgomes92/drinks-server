@@ -6,7 +6,6 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     ...[
       winston.format.timestamp(),
-      ...(settings.app.debug ? [winston.format.colorize()] : []),
       ...(settings.app.debug ? [winston.format.prettyPrint()] : [winston.format.json()]),
     ],
   ),
@@ -14,7 +13,6 @@ const logger = winston.createLogger({
     new winston.transports.Console({
       handleExceptions: true,
       name: 'console.info',
-      colorize: settings.app.debug,
       showLevel: true,
     }),
   ],

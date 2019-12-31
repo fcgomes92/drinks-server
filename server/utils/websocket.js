@@ -6,6 +6,6 @@ export const wsToJson = (ws, req) => {
     return ws.send(JSON.stringify(data));
   } catch (err) {
     logger.error(err);
-    return ws.send(JSON.stringify({ error: '', code: 500 }));
+    return ws.send(JSON.stringify({ error: true, code: 500 }));
   }
 };

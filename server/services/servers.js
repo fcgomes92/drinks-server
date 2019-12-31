@@ -1,7 +1,8 @@
 import uuid4 from 'uuid/v4';
-import { servers } from '../database/database';
-import { checkServerPassword, hashPassword } from '../utils/auth';
+import { servers, users } from '../database/database';
+import { hashPassword } from '../utils/auth';
 import logger from '../utils/logger';
+import { wsToJson } from '../utils/websocket';
 
 export const getAllServers = async (req, res) => {
   try {
@@ -33,46 +34,55 @@ export const createServer = async (req, res, next) => {
   }
 };
 
+const handleServerMessage = async ({ type = 'no_type', server, ...rest }) => {
+  const success = {
+    type,
+    error: false,
+    code: 200,
+  };
+  switch (type) {
+    case 'users': {
+      console.log(server.users);
+      const { docs: serverUsers } = await users.find({
+        selector: {
+          _id: { $in: server.users },
+        },
+      });
+      console.log(serverUsers);
+      return {
+        ...success,
+        data: {
+          users: serverUsers,
+        },
+      };
+    }
+    case 'time':
+      return { ...success, data: { now: new Date() } };
+    case 'echo':
+    default:
+      return { ...success, data: { ...rest } };
+  }
+};
+
 export const connectToServer = async (ws, req, next) => {
   try {
     const doc = await servers.get(req.params.id);
     doc.users = [...(doc.users || []), req.user.user_id];
     await servers.put(doc);
-    ws.on('message', data => {
-      const _data = JSON.parse(data);
-      const { type = 'no_type' } = _data;
-      switch (type) {
-        case 'time':
-          return ws.send(
-            JSON.stringify({
-              error: false,
-              code: 200,
-              data: {
-                now: new Date(),
-                user: req.user.email,
-              },
-              type,
-            }),
-          );
-        case 'echo':
-        default:
-          return ws.send(
-            JSON.stringify({
-              error: false,
-              code: 200,
-              data: {
-                ..._data,
-                user: req.user.email,
-              },
-              type,
-            }),
-          );
+    ws.on('message', async data => {
+      try {
+        const _data = JSON.parse(data);
+        return wsToJson(ws, { data: await handleServerMessage({ ..._data, server: doc }) });
+      } catch (error) {
+        logger.error(error);
+        return wsToJson(ws, { data: { code: error.message, error: true, data: { error } } });
       }
     });
-    ws.send(JSON.stringify({ error: false, code: 200, type: 'connection', data: {} }));
+    req.data = { error: false, code: 200, type: 'connection', data: {} };
+    return next();
   } catch (error) {
     logger.error({ error });
-    return ws.send(JSON.stringify({ error: true, code: 400, data: {} }));
+    return wsToJson(ws, { data: { error: true, code: 400, data: {} } });
   }
 };
 
@@ -85,11 +95,3 @@ export const deleteServer = async (req, res) => {
     return res.status(400).json({});
   }
 };
-
-function handleMessageType({ type, ws, data }) {
-  switch (type) {
-    default:
-  }
-}
-
-function onNewClient() {}
