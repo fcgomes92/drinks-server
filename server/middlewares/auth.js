@@ -1,6 +1,6 @@
-import admin, { getPassword } from '../utils/auth';
+import admin, { getPassword, checkServerPassword } from '../utils/auth';
 import logger from '../utils/logger';
-import { users } from '../database/database';
+import { users, servers } from '../database/database';
 
 const getAuthToken = async (req, res, next) => {
   if (req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
@@ -43,14 +43,20 @@ export const requireAuthenticationWs = async (ws, req, next) => {
     return next();
   } catch (e) {
     logger.error({ error: e });
+    ws.send(JSON.stringify({ error: e, code: 401, data: { message: 'not_authorized' } }));
     throw new Error();
   }
 };
 
 export const requireServerAuthenticationWs = async (ws, req, next) => {
   const { id } = req.params;
-  const doc = await servers.get(id);
-  const password = getPassword(req);
-  if (!(await checkServerPassword(doc, password))) ;
-  next();
+  try {
+    const doc = await servers.get(id);
+    const password = getPassword(req);
+    if (!(await checkServerPassword(doc, password))) throw new Error();
+    next();
+  } catch (error) {
+    logger.error(error);
+    return ws.send(JSON.stringify({ error, code: 400, data: { message: 'server_not_authorized' } }));
+  }
 };

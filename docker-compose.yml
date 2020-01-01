@@ -1,7 +1,10 @@
-version: '3'
+version: '3.5'
 services:
   web:
     image: fcogmes92/drinks-server
+    container_name: drinks-server
+    hostname: server.drinks.local
+    network_mode: bridge
     build:
       context: .
       dockerfile: ./Dockerfile
@@ -14,3 +17,18 @@ services:
       - ./:/app
       - /app/node_modules
       - /database
+
+  # You can uncomment this to tunnel your host connection throgh this
+  # DNS. W/ it you can resolve containers hostnames in the host and
+  # inside the containers itself.
+  # If you prefer to run alone (not inside this compose file) you can use
+  # $ docker run --hostname dns.mageddo --restart=unless-stopped -p 5380:5380 -v /var/run/docker.sock:/var/run/docker.sock -v /etc/resolv.conf:/etc/resolv.conf defreitas/dns-proxy-server 
+  # dns:
+  #   image: defreitas/dns-proxy-server
+  #   hostname: dns.mageddo
+  #   restart: unless-stopped
+  #   ports: 
+  #     - "5380:5380"
+  #   volumes: 
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - /etc/resolv.conf:/etc/resolv.conf
